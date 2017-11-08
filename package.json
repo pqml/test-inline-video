@@ -1,7 +1,7 @@
 {
   "name": "test-inline-video",
-  "description": "<h1 align=\"center\">Lib Name</h1> <h3 align=\"center\">Lib Description</h3>",
-  "version": "1.0.0",
+  "description": "Test support of inline video",
+  "version": "0.0.1",
   "scripts": {
     "build": "NODE_ENV=production webpack -p --config ./webpack.production.config.js --progress --colors",
     "start": "webpack-dev-server --watch -d --progress --colors"
@@ -30,7 +30,7 @@
     "url": "git+https://github.com/pqml/test-inline-video.git"
   },
   "keywords": [
-    "Test",
+    "test",
     "inline",
     "video",
     "support"
