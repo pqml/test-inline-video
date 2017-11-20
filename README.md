@@ -6,7 +6,7 @@
 
 ## Installation
 ```sh
-npm install -S pmql/test-inline-video
+npm install -S test-inline-video
 ```
 <br>
 

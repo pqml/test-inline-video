@@ -1,7 +1,7 @@
 {
   "name": "test-inline-video",
   "description": "Test support of inline video",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "scripts": {
     "build": "NODE_ENV=production webpack -p --config ./webpack.production.config.js --progress --colors",
     "start": "webpack-dev-server --watch -d --progress --colors"
