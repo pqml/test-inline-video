@@ -3,7 +3,7 @@
 <br><br><br>
 
 ## Example
-Example on [https://pqml.github.io/test-inline-video](https://pqml.github.io/test-inline-video)
+Example on [pqml.github.io/test-inline-video/](https://pqml.github.io/test-inline-video/)
 
 <br><br>
 
