@@ -1,4 +1,5 @@
 .DS_Store
 .idea
+.vscode
+*.log
 node_modules
-npm-debug.log

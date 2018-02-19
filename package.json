@@ -1,42 +1,46 @@
 {
   "name": "test-inline-video",
-  "description": "Test support of inline video",
-  "version": "0.0.2",
+  "amdName": "testInlineVideo",
+  "description": "Test if inline video mode is available",
+  "version": "0.1.0",
+  "source": "src/index.js",
+  "main": "dist/test-inline-video.js",
+  "module": "dist/test-inline-video.m.js",
+  "unpkg": "dist/test-inline-video.umd.js",
+  "files": [
+    "dist"
+  ],
   "scripts": {
-    "build": "NODE_ENV=production webpack -p --config ./webpack.production.config.js --progress --colors",
-    "start": "webpack-dev-server --watch -d --progress --colors"
-  },
-  "main": "build/test-inline-video.min.js",
-  "author": "pqml",
-  "license": "MIT",
-  "directories": {
-    "example": "example"
-  },
-  "dependencies": {},
-  "devDependencies": {
-    "webpack": "^1.13.3",
-    "webpack-node-externals": "^1.5.4",
-    "babel-core": "^6.18.2",
-    "babel-loader": "^6.2.8",
-    "babel-plugin-transform-decorators-legacy": "^1.3.4",
-    "babel-preset-latest": "^6.16.0",
-    "file-loader": "^0.9.0",
-    "webpack-dev-server": "^1.16.2",
-    "webpack-uglify-js-plugin": "^1.1.9",
-    "webpack-watch-livereload-plugin": "0.0.1"
+    "start": "microbundle watch -f umd -o example --target browser & light-server -s example -p 8080 -w example/**/*",
+    "build": "microbundle -f es,cjs --external all && microbundle -f umd --target browser",
+    "test": "eslint src/**",
+    "deploy": "ghp example"
   },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/pqml/test-inline-video.git"
   },
   "keywords": [
-    "test",
+    "inlinevideo",
     "inline",
-    "video",
-    "support"
+    "video"
   ],
+  "author": "pqml",
+  "license": "MIT",
   "bugs": {
     "url": "https://github.com/pqml/test-inline-video/issues"
   },
-  "homepage": "https://github.com/pqml/test-inline-video#readme"
+  "homepage": "https://github.com/pqml/test-inline-video#readme",
+  "dependencies": {},
+  "devDependencies": {
+    "eslint": "^4.18.0",
+    "eslint-config-standard": "^11.0.0-beta.0",
+    "eslint-plugin-import": "^2.8.0",
+    "eslint-plugin-node": "^6.0.0",
+    "eslint-plugin-promise": "^3.6.0",
+    "eslint-plugin-standard": "^3.0.1",
+    "ghp": "^1.1.4",
+    "light-server": "^2.4.0",
+    "microbundle": "^0.4.3"
+  }
 }

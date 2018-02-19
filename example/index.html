@@ -1,13 +1,30 @@
-<!DOCTYPE html>
 <html lang="en">
   <head>
     <meta charset="utf-8">
-    <title>test-inline-video</title>
-    <meta name="description" content="test-inline-video">
-    <meta name="author" content="pqml">
-    <link rel="stylesheet" href="style.css">
+    <title>test-inline-video example</title>
+    <meta name="description" content="Example for testInlineVideo()">
+    <meta name="viewport" content="width=device-width,height=device-height,initial-scale=1.0,minimal-ui">
+    <link href="//fonts.googleapis.com/css?family=Nunito:300,400,700" rel="stylesheet">
+    <link href="//cdn.jsdelivr.net/npm/@ajusa/lit@1.0.0/dist/lit.css" rel="stylesheet">
   </head>
-  <body>
-    <script src="bundle.js"></script>
+  <body class="c">
+    <h2>test-inline-video example</h2>
+    <h5><a href="https://github.com/pqml/test-inline-video">→ View test-inline-video on github</a></h5><br>
+    <pre></pre>
+    <script src="//cdn.polyfill.io/v2/polyfill.min.js"></script>
+    <script src="test-inline-video.umd.js"></script>
+    <script>
+      (function () {
+        var $main = document.getElementsByTagName('pre')[0]
+        function log (msg) { $main.innerHTML += msg + '\n' }
+
+        var testInline = window.testInlineVideo
+        if (testInline) log('Test inline video...')
+
+        testInline()
+          .then(function () { log('✔ Inline video mode is available!') })
+          .catch(function (err) { log(err.message) })
+      })()
+    </script>
   </body>
 </html>
