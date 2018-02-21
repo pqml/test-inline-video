@@ -19,13 +19,13 @@ function createVideo () {
 
   // stylize the video to make it almost invisible
   css(video, {
-    zIndex: 0,
+    zIndex: 10000, // Place the video to be visible to avoid iOS not playing it
     position: 'fixed',
-    top: 0,
-    left: 0,
+    top: '50%',
+    left: '50%',
     width: 1 + 'px',
     height: 1 + 'px',
-    opacity: 0.01, // Can be 0 or the video won't play on some devices
+    opacity: 0.01, // can't be 0 or the video won't play on some devices
     pointerEvents: 'none'
   })
 

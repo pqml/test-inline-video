@@ -2,7 +2,7 @@
   "name": "test-inline-video",
   "amdName": "testInlineVideo",
   "description": "Test if inline video mode is available",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "source": "src/index.js",
   "main": "dist/test-inline-video.js",
   "module": "dist/test-inline-video.m.js",
