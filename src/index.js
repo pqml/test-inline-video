@@ -1,81 +1,80 @@
 import VIDEO from './video'
-import { css, attr } from './dom'
+
+const w = window
+const raf = w.requestAnimationFrame || w.mozRequestAnimationFrame || w.webkitRequestAnimationFrame || w.msRequestAnimationFrame
+var perf = w.performance || Date
 
 let visibilityEvt
 if (typeof document.hidden !== 'undefined') visibilityEvt = { name: 'visibilitychange', key: 'hidden' }
 else if (typeof document.msHidden !== 'undefined') visibilityEvt = { name: 'msvisibilitychange', key: 'msHidden' }
 else if (typeof document.webkitHidden !== 'undefined') visibilityEvt = { name: 'webkitvisibilitychange', key: 'webkitHidden' }
 
-function createVideo () {
-  let video = document.createElement('video')
-
-  // set video as inline video
-  attr(video, {
-    'autoplay': '',
-    'muted': '',
-    'playsinline': '',
-    'webkit-playsinline': ''
-  })
-
-  // stylize the video to make it almost invisible
-  css(video, {
-    zIndex: 10000, // Place the video to be visible to avoid iOS not playing it
-    position: 'fixed',
-    top: '50%',
-    left: '50%',
-    width: 1 + 'px',
-    height: 1 + 'px',
-    opacity: 0.01, // can't be 0 or the video won't play on some devices
-    pointerEvents: 'none'
-  })
-
-  return video
-}
-
-export default function testInlineVideo (opts) {
+export default function testInlineVideo () {
   return new Promise((resolve, reject) => {
-    let timer, video
-    opts = opts || {}
-    opts.timeout = opts.timeout || 2000
+    let video, playing, nt, skip
+    let fpsCounts = 0
+    let fpsSum = 0
+    let lt = 0
+    const out = { badFps: false, error: new Error('No support for inline video') }
 
-    init()
+    video = document.createElement('video')
+    document.body.appendChild(video)
+    video.setAttribute('playsinline', '')
+    video.setAttribute('webkit-playsinline', '')
+    video.style.cssText = 'z-index:10000;position:fixed;top:50%;left:50%;width:1px;height:1px;opacity:0.01;pointer-events:none;user-select:none'
+    video.autoplay = true
+    video.muted = true
+    video.src = VIDEO
+    video.play()
 
-    function init () {
-      video = createVideo()
-      video.onload = () => { video.play() }
-      video.src = VIDEO
-      video.addEventListener('timeupdate', onActive)
-      document.body.appendChild(video)
-      if (visibilityEvt) document.addEventListener(visibilityEvt.name, onVisibilityChange, false)
-      timer = createTimer()
+    video.onplay = () => {
+      playing = true
     }
 
-    function createTimer () {
-      return window.setTimeout(() => {
-        dispose()
-        reject(new Error('No support for inline video'))
-      }, opts.timeout)
-    }
-
-    // stop the timer if the user hide the tab, to avoid false-negative results
-    function onVisibilityChange () {
-      window.clearTimeout(timer)
-      if (!document[visibilityEvt.key]) {
-        timer = createTimer()
+    video.oncanplay = () => {
+      dispose()
+      lt = perf.now()
+      if (playing) {
+        resolve(out)
+      } else {
+        if (raf) {
+          if (visibilityEvt) document.addEventListener(visibilityEvt.name, visibilityChange, false)
+          raf(count)
+        } else {
+          reject(out)
+        }
       }
     }
 
-    function onActive () {
-      dispose()
-      resolve()
+    function count () {
+      nt = perf.now()
+      if (skip) {
+        skip = false
+        lt = nt
+        raf(count)
+        return
+      }
+      fpsSum += nt - lt
+      lt = nt
+      if (++fpsCounts < 12) {
+        raf(count)
+      } else {
+        if (visibilityEvt) document.removeEventListener(visibilityEvt.name, visibilityChange, false)
+        if (fpsCounts / fpsSum * 1000 < 45) out.badFps = true
+        reject(out)
+      }
+    }
+
+    // reset current fps counting
+    function visibilityChange () {
+      skip = true
     }
 
     function dispose () {
-      if (visibilityEvt) document.removeEventListener(visibilityEvt.name, onVisibilityChange, false)
-      window.clearTimeout(timer)
-      timer = null
-      video.removeEventListener('timeupdate', onActive)
       document.body.removeChild(video)
+      video.onplay = null
+      video.oncanplay = null
+      video.pause()
       video = null
     }
   })

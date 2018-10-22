@@ -23,7 +23,10 @@
 
         testInline()
           .then(function () { log('✔ Inline video mode is available!') })
-          .catch(function (err) { log(err.message) })
+          .catch(function (result) {
+            log(result.error.message)
+            if (result.badFps) log('You are probably in low-battery mode')
+          })
       })()
     </script>
   </body>

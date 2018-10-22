@@ -12,7 +12,9 @@ Example on [pqml.github.io/test-inline-video/](https://pqml.github.io/test-inlin
 - Small module: 1kb gziped (video included)
 - Promise-based test: the promise will be resolved if the video **can play** inline
 - You can use this library to test low battery mode on iOS: inline videos don't play when it's enabled
-- Test-inline-video use Promises. Use a polyfill if you have to support IE / old browser versions
+  - The lib measure framerate to see if there is fps throttling : this is often a sign of low battery mode enabled
+- :warning: Test-inline-video use Promises. Use a polyfill if you have to support IE / old browser versions
+
 
 <br><br>
 
@@ -32,10 +34,16 @@ $ yarn add test-inline-video
 import testInlineVideo from 'test-inline-video' // ES6 module import
 const testInlineVideo = require('test-inline-video') // CommonJS module import
 
-testInlineVideo({ timeout: 3000 }) // default: 2000ms
-  .then(() => console.log('support inline video'))
+testInlineVideo()
+  .then(() => console.log('Supports inline video'))
   // if the video is not played 3sec after the call, we reject the test
-  .catch(() => console.warn('inline video not supported') );
+  .catch(result => {
+    console.warn('inline video not supported')
+
+    // result.badFps will be set to true if there is fps throttling during the check
+    // You can use it to diplay a "low battery mode" specific message
+    if (result.badFps) console.warn('Probably on low-battery mode')
+  });
 ```
 
 ##### Installation & usage from a browser
@@ -43,9 +51,12 @@ testInlineVideo({ timeout: 3000 }) // default: 2000ms
 ```html
 <script src="//unpkg.com/test-inline-video"></script>
 <script>
-  window.testInlineVideo()
-    .then(() => console.log('support inline video'))
-    .catch(() => console.warn('inline video not supported') );
+  windowtestInlineVideo()
+    .then(() => console.log('Supports inline video'))
+    .catch(result => {
+      console.warn('inline video not supported')
+      if (result.badFps) console.warn('Probably on low-battery mode')
+    });
 </script>
 ```
 

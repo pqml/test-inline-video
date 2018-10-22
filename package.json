@@ -2,7 +2,7 @@
   "name": "test-inline-video",
   "amdName": "testInlineVideo",
   "description": "Test if inline video mode is available",
-  "version": "0.1.1",
+  "version": "0.2.0",
   "source": "src/index.js",
   "main": "dist/test-inline-video.js",
   "module": "dist/test-inline-video.m.js",
@@ -12,7 +12,7 @@
   ],
   "scripts": {
     "start": "microbundle watch -f umd -o example --target browser & light-server -s example -p 8080 -w example/**/*",
-    "build": "microbundle -f es,cjs --external all && microbundle -f umd --target browser",
+    "build": "microbundle -f es,cjs --sourcemap=false && microbundle -f umd --target browser --sourcemap=false",
     "test": "eslint src/**",
     "deploy": "ghp example"
   },
@@ -33,14 +33,12 @@
   "homepage": "https://github.com/pqml/test-inline-video#readme",
   "dependencies": {},
   "devDependencies": {
-    "eslint": "^4.18.0",
-    "eslint-config-standard": "^11.0.0-beta.0",
-    "eslint-plugin-import": "^2.8.0",
-    "eslint-plugin-node": "^6.0.0",
-    "eslint-plugin-promise": "^3.6.0",
-    "eslint-plugin-standard": "^3.0.1",
-    "ghp": "^1.1.4",
-    "light-server": "^2.4.0",
-    "microbundle": "^0.4.3"
+    "@internet/eslint-config": "^0.0.3",
+    "ghp": "^1.3.1",
+    "light-server": "^2.6.0",
+    "microbundle": "^0.6.0"
+  },
+  "eslintConfig": {
+    "extends": "@internet"
   }
 }

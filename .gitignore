@@ -1,5 +1,12 @@
-.DS_Store
 .idea
 .vscode
-*.log
 node_modules
+npm-debug.log*
+.tmp
+logs
+*.log
+.DS_Store
+.AppleDouble
+.LSOverride
+Icon
+._*
