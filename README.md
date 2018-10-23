@@ -8,13 +8,13 @@ Example on [pqml.github.io/test-inline-video/](https://pqml.github.io/test-inlin
 <br><br>
 
 ## Features & Requirements
-- Try to autoplay a tiny base64 video to test inline video availability
-- Small module: 1kb gziped (video included)
-- Promise-based test: the promise will be resolved if the video **can play** inline
-- You can use this library to test low battery mode on iOS: inline videos don't play when it's enabled
-  - The lib measure framerate to see if there is fps throttling : this is often a sign of low battery mode enabled
-- :warning: Test-inline-video use Promises. Use a polyfill if you have to support IE / old browser versions
-
+- Small module: < 800b gziped
+- :warning: **Test-inline-video use Promises.** Use a [polyfill](https://www.npmjs.com/package/promise-polyfill) if you have to support IE / old browser versions
+- The lib returns a `dataSave` property to check if browser Data Saving is enabled.
+  - This is useful for Android: [Chrome Data Saver](https://support.google.com/chrome/answer/2392284?co=GENIE.Platform%3DAndroid&hl=en) turn off autoplay.
+- You can also use this library to test low battery mode on iOS: inline videos don't play when it's enabled
+  - The lib can measure framerate with the `measureFps` option to see if there is also FPS throttling: on iOS this is also a sign of low battery mode enabled
+  - The framereate measure makes the test a bit longer - do not use this option if you don't need it
 
 <br><br>
 
@@ -34,16 +34,21 @@ $ yarn add test-inline-video
 import testInlineVideo from 'test-inline-video' // ES6 module import
 const testInlineVideo = require('test-inline-video') // CommonJS module import
 
-testInlineVideo()
-  .then(() => console.log('Supports inline video'))
-  // if the video is not played 3sec after the call, we reject the test
-  .catch(result => {
-    console.warn('inline video not supported')
-
-    // result.badFps will be set to true if there is fps throttling during the check
-    // You can use it to diplay a "low battery mode" specific message
-    if (result.badFps) console.warn('Probably on low-battery mode')
-  });
+// Also test for framerate throttling
+testInlineVideo({ testFramerate: true })
+  .then(function (result) {
+    // resut.autoplay return true of false if videos can autoplay
+    if (result.autoplay) {
+      log('Inline video mode is available!');
+    } else {
+      // Default error message : 'No support for inline video'
+      log(result.error.message);
+      // Test for FPS throttling on iOS
+      if (result.badFps && result.iOS) log('You are probably in low-battery mode');
+      // Test for Data Saver
+      if (result.saveData) log('Please, disable your browser Data Saver');
+    }
+  })
 ```
 
 ##### Installation & usage from a browser
@@ -51,12 +56,16 @@ testInlineVideo()
 ```html
 <script src="//unpkg.com/test-inline-video"></script>
 <script>
+  // Don't forget the Promise polyfill if you need one
   windowtestInlineVideo()
-    .then(() => console.log('Supports inline video'))
-    .catch(result => {
-      console.warn('inline video not supported')
-      if (result.badFps) console.warn('Probably on low-battery mode')
-    });
+    .then(function (result) {
+      // resut.autoplay return true of false if videos can autoplay
+      if (result.autoplay) {
+        log('Inline video mode is available!');
+      } else {
+        log('No autoplay support');
+      }
+    })
 </script>
 ```
 
